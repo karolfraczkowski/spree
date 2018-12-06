@@ -9,14 +9,12 @@ Dir['./spec/shared_examples/**/*.rb'].each { |file| require file }
 
 # New driver for Chrome browser
 Capybara.register_driver :chrome do |app|
-  # Preferences for disabling notifications in the browser
-  prefs = { 'profile.managed_default_content_settings.notifications' => 2 } 
-  caps = Selenium::WebDriver::Remote::Capabilities.chrome(chrome_options: { prefs: prefs })
+  prefs = { 'profile.managed_default_content_settings.notifications' => 2 }
+  options = %w[incognito start-maximized disable-notifications]
 
   # Actual creating of the new driver
-  Capybara::Selenium::Driver.new(app, browser: :chrome, desired_capabilities: caps)
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: Selenium::WebDriver::Chrome::Options.new(args: options, prefs: prefs))
 end
-
 # New driver for Firefox browser
 Capybara.register_driver :firefox do |app|
   Capybara::Selenium::Driver.new(app, browser: :firefox)
@@ -30,15 +28,7 @@ end
 # -don't use rails server
 # -Use Chrome as default
 # -Set up staging environment as default
-ENV['browser'] ||= 'chrome'
-Capybara.default_driver = case ENV['browser']
-                          when 'chrome'
-                            :chrome
-                          when 'firefox'
-                            :firefox
-                          when 'safari'
-                            :safari
-                          end 
+Capybara.default_driver = :chrome
 
 Capybara.app_host = 'https://karol-spree.herokuapp.com'
 
@@ -49,9 +39,9 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
-  end 
+  end
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
-  end 
+  end
   config.shared_context_metadata_behavior = :apply_to_host_groups
 end
