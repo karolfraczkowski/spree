@@ -1,15 +1,32 @@
 describe 'links' do
-    before :all do
+    before (:each) do
       visit '/'
     end
 
   context 'header' do
-    it 'check login' do
-      byebug
-      click_link ('')
+    before do
+      find('#link-to-login').click
+
+      fill_in 'spree_user_email', with: 'karol.fraczkowski@sparksolutions.co'
+      fill_in 'spree_user_password', with: '1234567890'
+
+      find('.btn.btn-lg').click
     end
-    xit 'check my account'
-    xit 'check logout'
+
+    after do
+
+       find('.navbar-right [href="/logout"]').click
+    end
+     context 'login/logout' do
+      it 'user can login' do
+        expect(page).to have_css('.navbar-right', text: 'My Account')
+      end
+     byebug
+      it 'click my account' do
+        find('#nav-bar [href="/account"]').click
+      expect(page).to have_css('h1', text: /My Account/i)
+      end
+
     xit 'check home'
     xit 'check spree'
     xit 'check cart'
@@ -32,6 +49,4 @@ describe 'links' do
    xit 'check apache'
    xit 'check spree'
    xit 'check rails'
-  end
-
-end
+   end
