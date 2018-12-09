@@ -1,5 +1,5 @@
 describe 'links' do
-    before (:each) do
+    before do
       visit '/'
     end
 
@@ -11,19 +11,21 @@ describe 'links' do
       fill_in 'spree_user_password', with: '1234567890'
 
       find('.btn.btn-lg').click
-    end
+     end
+   end
 
     after do
-
-       find('.navbar-right [href="/logout"]').click
+byebug
+      find('.navbar-right [href="/logout"]').click sleep 10
     end
      context 'login/logout' do
       it 'user can login' do
         expect(page).to have_css('.navbar-right', text: 'My Account')
       end
-     byebug
+    end
+
       it 'click my account' do
-        find('#nav-bar [href="/account"]').click
+      find('#nav-bar [href="/account"]').click sleep 10
       expect(page).to have_css('h1', text: /My Account/i)
       end
 
