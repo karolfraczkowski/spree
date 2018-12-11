@@ -3,7 +3,7 @@ describe 'links' do
     visit '/'
   end
 
-  context 'header' do
+  context 'header/login/logout' do
     before do
       find('#link-to-login').click
 
@@ -17,26 +17,26 @@ describe 'links' do
       visit '/logout'
     end
 
-    context 'login/logout' do
-      it 'check spree' do
-        find('#logo [href="/"]').click
-        expect(page.current_url).to eq "#{Capybara.app_host}/"
-      end
-
-      it 'check home' do
-        find('.info', text: 'Ruby on Rails Tote').click
-        find('#home-link [href="/"]').click
-        expect(page).to have_link(nil, href: '/')
-      end
-
-      it 'user can login' do
-        expect(page).to have_css('.navbar-right', text: 'My Account')
-      end
+    it 'user can login' do
+      expect(page).to have_css('.navbar-right', text: 'My Account')
     end
 
     it 'click my account' do
       find('#nav-bar [href="/account"]').click
       expect(page).to have_css('h1', text: /My Account/i)
+    end
+  end
+
+  context 'header/no-login' do
+    it 'check spree' do
+      find('#logo [href="/"]').click
+      expect(page.current_url).to eq "#{Capybara.app_host}/"
+    end
+
+    it 'check home' do
+      find('.info', text: 'Ruby on Rails Tote').click
+      find('#home-link [href="/"]').click
+      expect(page).to have_link(nil, href: '/')
     end
 
     it 'check cart' do
