@@ -7,26 +7,20 @@ describe 'links' do
     before do
       find('#link-to-login').click
 
-      fill_in 'spree_user_email', with: 'karol.fraczkowski@sparksolutions.co'
-      fill_in 'spree_user_password', with: '1234567890'
+      fill_in 'spree_user_email', with: ENV['USERNAME_SPREE']
+      fill_in 'spree_user_password', with: ENV['PASSWORD_SPREE']
 
       find('.btn.btn-lg').click
-     end
+    end
 
-     after do
-       visit '/logout'
-     end
+    after do
+      visit '/logout'
+    end
 
-     context 'login/logout' do
-       it 'check search' do
-         find('.btn-success').click
-         sleep 2
-         expect(page.current_url).to eq ("https://karol-spree.herokuapp.com/products?utf8=%E2%9C%93&taxon=&keywords=")
-       end
-
-       it 'check spree' do
-         find('#logo [href="/"]').click
-         expect(page.current_url).to eq "#{Capybara.app_host}/"
+    context 'login/logout' do
+      it 'check spree' do
+        find('#logo [href="/"]').click
+        expect(page.current_url).to eq "#{Capybara.app_host}/"
        end
 
        it 'check home' do
@@ -47,28 +41,53 @@ describe 'links' do
 
      it 'check cart' do
        find('#link-to-cart [href="/cart"]').click
-       expect(page.current_url).to eq ("https://karol-spree.herokuapp.com/cart")
+       expect(page.current_url).to eq "#{Capybara.app_host}/#{'cart'}"
      end
+   end
 
-   context 'pagination' do
-     it 'check next' do
-       find(:xpath, '//*[@id="content"]/div/ul/li[@class="next_page"]/a').click
-       expect(page.current_url).to eq "#{Capybara.app_host}/#{'?page=2'}"
-     end
-
-       xit 'check last'
+     context 'pagination' do
+       it 'check next/last' do
+         find(:xpath, '//*[@id="content"]/div/ul/li[@class="next_page"]/a').click
+         expect(page.current_url).to eq "#{Capybara.app_host}/#{'?page=2'}"
+       end
      end
 
      context 'categories' do
-       xit 'check bags'
-       xit 'check mugs'
-       xit 'check clothing'
+      it 'check bags' do
+       find('.list-group-item', text: 'Bags').click
+       expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/bags'}"
      end
-     context 'brands' do
-       xit 'check ruby'
-       xit 'check apache'
-       xit 'check spree'
-       xit 'check rails'
+
+     it 'check mugs' do
+       find('.list-group-item', text: 'Mugs').click
+       expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/mugs'}"
+     end
+
+     it 'check clothing' do
+       find('.list-group-item', text: 'Clothing').click
+       expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/clothing'}"
+     end
+   end
+
+   context 'brands' do
+     it 'check ruby' do
+       find('.list-group-item', text: 'Ruby').click
+       expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/ruby'}"
+     end
+
+     it 'check apache' do
+       find('.list-group-item', text: 'Apache').click
+       expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/apache'}"
+     end
+
+     it 'check spree' do
+       find('.list-group-item', text: 'Spree').click
+       expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/spree'}"
+     end
+
+     it 'check rails' do
+       find('.list-group-item', text: 'Rails').click
+       expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/rails'}"
      end
    end
  end
