@@ -1,8 +1,8 @@
 source "https://rubygems.org"
 
-gem 'rspec'
 gem 'byebug'
 gem 'capybara'
+gem 'chromedriver-helper'
+gem 'rspec'
 gem 'rspec-expectations'
 gem 'selenium-webdriver'
-gem 'chromedriver-helper'
