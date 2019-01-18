@@ -1,4 +1,6 @@
 require 'bundler'
+require 'capybara/rspec'
+require 'selenium/webdriver'
 Bundler.require
 require 'capybara/dsl'
 require 'rspec/expectations'

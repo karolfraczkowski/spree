@@ -6,7 +6,8 @@ module MainHelper
     fill_in 'spree_user_email', with: email
     fill_in 'spree_user_password', with: password
 
-    find('.btn.btn-lg').click
+    click_button 'Login'
+        #find('.btn.btn-lg').click
   end
 
   def logout
