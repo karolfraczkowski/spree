@@ -1,4 +1,7 @@
 require 'bundler'
+require 'capybara/rspec'
+require 'selenium/webdriver'
+require 'faker'
 Bundler.require
 require 'capybara/dsl'
 require 'rspec/expectations'
@@ -34,8 +37,11 @@ Capybara.app_host = 'https://karol-spree.herokuapp.com'
 
 Capybara.run_server = false
 
+ShowMeTheCookies.register_adapter(:chrome, ShowMeTheCookies::Selenium)
 RSpec.configure do |config|
   config.include Capybara::DSL
+  config.include MainHelper
+  config.include ShowMeTheCookies, :type => :feature
 
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

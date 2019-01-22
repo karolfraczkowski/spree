@@ -1,91 +1,52 @@
-describe 'links' do
-  before do
-    visit '/'
-  end
+feature 'links' do
+  before { visit '/' }
 
-  context 'header/login/logout' do
-    before do
-      find('#link-to-login').click
+  after { logout }
 
-      fill_in 'spree_user_email', with: ENV['USERNAME_SPREE']
-      fill_in 'spree_user_password', with: ENV['PASSWORD_SPREE']
+  context 'Header' do
+    scenario 'Redirects to My Account' do
+      login(ENV['USERNAME_SPREE'], ENV['PASSWORD_SPREE'])
+      click_link 'My Account'
 
-      find('.btn.btn-lg').click
+      expect(page.current_url).to eq "#{Capybara.app_host}/account"
     end
 
-    after do
-      visit '/logout'
-    end
+    scenario 'Check logo' do
+      find('#logo').click
 
-    it 'user can login' do
-      expect(page).to have_css('.navbar-right', text: 'My Account')
-    end
-
-    it 'click my account' do
-      find('#nav-bar [href="/account"]').click
-      expect(page).to have_css('h1', text: /My Account/i)
-    end
-  end
-
-  context 'header/no-login' do
-    it 'check spree' do
-      find('#logo [href="/"]').click
       expect(page.current_url).to eq "#{Capybara.app_host}/"
     end
 
-    it 'check home' do
-      find('.info', text: 'Ruby on Rails Tote').click
-      find('#home-link [href="/"]').click
-      expect(page).to have_link(nil, href: '/')
+    scenario 'Check home' do
+      first('.product-list-item').click
+      find('#home-link').click_link
+
+      expect(page.current_url).to eq "#{Capybara.app_host}/"
     end
 
-    it 'check cart' do
-      find('#link-to-cart [href="/cart"]').click
-      expect(page.current_url).to eq "#{Capybara.app_host}/#{'cart'}"
-    end
-  end
+    scenario 'Check cart' do
+      find('#link-to-cart').click
 
-  context 'categories' do
-    it 'check bags' do
-      find('.list-group-item', text: 'Bags').click
-      expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/bags'}"
-    end
-
-    it 'check mugs' do
-      find('.list-group-item', text: 'Mugs').click
-      expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/mugs'}"
-    end
-
-    it 'check clothing' do
-      find('.list-group-item', text: 'Clothing').click
-      expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/clothing'}"
+      expect(page.current_url).to eq "#{Capybara.app_host}/cart"
     end
   end
 
-  context 'brands/pagination' do
-    it 'check ruby' do
-      find('.list-group-item', text: 'Ruby').click
-      expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/ruby'}"
+  context 'Other links' do
+    scenario 'Check categories' do
+      categories = all('.list-group-item').collect(&:text)
+      categories.each do |category|
+        click_link category
+
+        expect(page).to have_css('.taxon-title', text: category)
+
+        expect(page.current_url).to eq "#{Capybara.app_host}/t/#{category.downcase}"
+      end
     end
 
-    it 'check apache' do
-      find('.list-group-item', text: 'Apache').click
-      expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/apache'}"
-    end
+    scenario 'Check next/last' do
+      find('.next_page [href="/?page=2"]').click
 
-    it 'check spree' do
-      find('.list-group-item', text: 'Spree').click
-      expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/spree'}"
-    end
-
-    it 'check rails' do
-      find('.list-group-item', text: 'Rails').click
-      expect(page.current_url).to eq "#{Capybara.app_host}/#{'t/rails'}"
-    end
-
-    it 'check next/last' do
-      find(:xpath, '//*[@id="content"]/div/ul/li[@class="next_page"]/a').click
-      expect(page.current_url).to eq "#{Capybara.app_host}/#{'?page=2'}"
+      expect(page.current_url).to eq "#{Capybara.app_host}/?page=2"
     end
   end
 end
