@@ -2,6 +2,8 @@ require 'bundler'
 Bundler.require
 require 'capybara/dsl'
 require 'rspec/expectations'
+require 'capybara/rspec'
+require 'selenium/webdriver'
 
 # Adding helpers to all Specs
 Dir['./spec/helpers/**/*.rb'].each { |file| require file }
@@ -36,7 +38,7 @@ Capybara.run_server = false
 
 RSpec.configure do |config|
   config.include Capybara::DSL
-
+  config.include MainHelper
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
